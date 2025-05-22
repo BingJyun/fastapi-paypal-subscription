@@ -1,9 +1,13 @@
 import logging
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer
-from app.schemas.paypal_schema import Product
+from app.schemas.paypal_schema import Product, Plan
 from app.schemas.api_response import LoginResponse
-from app.services.paypal_api_service import get_access_token, create_product, list_products, show_product_details
+from app.services.paypal_api_service import (
+    get_access_token,
+    create_product, list_products, show_product_details,
+    create_plan, list_plans, show_plan_details
+)
 
 logger = logging.getLogger(__name__)
 
@@ -35,3 +39,17 @@ def list_products_route(access_token: str = Depends(oauth2_scheme)):
 @product_router.get("/{product_id}", response_model=dict)
 def show_product_details_route(product_id: str, access_token: str = Depends(oauth2_scheme)):
     return show_product_details(access_token, product_id)
+
+plan_router = APIRouter(tags=["plan"], prefix="/plan")
+
+@plan_router.post("", response_model=dict)
+def create_plan_route(plan: Plan, access_token: str = Depends(oauth2_scheme)):
+    return create_plan(access_token, plan)
+
+@plan_router.get("", response_model=dict)
+def list_plans_route(access_token: str = Depends(oauth2_scheme)):
+    return list_plans(access_token)
+
+@plan_router.get("/{plan_id}", response_model=dict)
+def show_plan_details_route(plan_id: str, access_token: str = Depends(oauth2_scheme)):
+    return show_plan_details(access_token, plan_id)

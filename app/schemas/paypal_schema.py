@@ -8,3 +8,13 @@ class Product(BaseModel):
     category: str | None = None
     image_url: str | None = None
     home_url: str | None = None
+
+class Plan(BaseModel):
+    product_id: str
+    name: str
+    billing_cycles: list
+    payment_preferences: dict
+    status: str | None = None
+    description: str | None = None
+    quantity_supported: bool | None = None
+    taxes: dict | None = None

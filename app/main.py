@@ -17,3 +17,4 @@ def read_root():
 
 app.include_router(paypal_api.auth_router, prefix=settings.API_V1_STR)
 app.include_router(paypal_api.product_router, prefix=settings.API_V1_STR)
+app.include_router(paypal_api.plan_router, prefix=settings.API_V1_STR)
