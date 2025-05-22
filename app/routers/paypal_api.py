@@ -1,20 +1,33 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from app.services.paypal_api_service import generate_access_token
-from app.services.paypal_token_storage import set_access_token
+import logging
+from fastapi import APIRouter, Depends
+from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer
+from app.schemas.paypal_schema import Product
+from app.schemas.api_response import LoginResponse
+from app.services.paypal_api_service import get_access_token, create_product, list_products
 
+logger = logging.getLogger(__name__)
 
 security = HTTPBasic()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 auth_router = APIRouter(tags=["auth"], prefix="/auth")
 
-@auth_router.post("/login", response_model=dict)
-async def generate_access_token_route(credentials: HTTPBasicCredentials = Depends(security)):
-    try:
-        client_id = credentials.username
-        client_secret = credentials.password
-        access_token = generate_access_token(client_id, client_secret)
-        set_access_token(access_token)
-        return {"message": "Access token generated successfully"}
-    except Exception as e:
-        raise HTTPException(400, str(e))
+@auth_router.post("/login", response_model=LoginResponse)
+def get_access_token_route(credentials: HTTPBasicCredentials = Depends(security)):
+    client_id = credentials.username
+    client_secret = credentials.password
+    access_token = get_access_token(client_id, client_secret)
+    return {
+        "message": "Access token generated successfully",
+        "access_token": access_token
+    }
+
+product_router = APIRouter(tags=["product"], prefix="/product")
+
+@product_router.post("/create", response_model=dict)
+def create_product_route(product: Product, access_token: str = Depends(oauth2_scheme)):
+    return create_product(access_token, product)
+
+@product_router.get("/list", response_model=dict)
+def list_products_route(access_token: str = Depends(oauth2_scheme)):
+    return list_products(access_token)
