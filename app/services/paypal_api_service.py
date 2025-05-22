@@ -52,3 +52,11 @@ def list_products(access_token: str) -> dict:
         url=paypal_url.product,
         token=access_token
     )
+
+@handle_errors
+def show_product_details(access_token: str, product_id: str) -> dict:
+    return make_request(
+        method="GET",
+        url=f"{paypal_url.product}/{product_id}",
+        token=access_token
+    )
