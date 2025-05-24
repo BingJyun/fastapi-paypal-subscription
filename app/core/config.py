@@ -7,6 +7,7 @@ class Settings(BaseSettings):
         extra="ignore"
     )
 
+    PROJECT_NAME: str
     API_V1_STR: str
 
     PAYPAL_BASE_URL: str
