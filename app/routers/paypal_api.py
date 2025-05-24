@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer
 from app.schemas.paypal_schema import Product, Plan
 from app.schemas.api_response import LoginResponse
-from app.services.paypal_api_service import (
+from app.services.paypal.api_service import (
     get_access_token,
     create_product, list_products, show_product_details,
     create_plan, list_plans, show_plan_details

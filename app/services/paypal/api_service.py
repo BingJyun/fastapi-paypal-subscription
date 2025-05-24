@@ -1,31 +1,16 @@
 import logging
-from urllib.parse import urljoin
 from fastapi import HTTPException
-from app.core.config import settings
 from app.schemas.paypal_schema import Product, Plan
+from app.services.paypal.config import paypal_url
 from app.utils.decorators import handle_errors
 from app.utils.http_utils import make_request
 
-PAYPAL_BASE_URL = settings.PAYPAL_BASE_URL
-PAYPAL_AUTH_ENDPOINT = settings.PAYPAL_AUTH_ENDPOINT
-PAYPAL_PRODUCT_ENDPOINT = settings.PAYPAL_PRODUCT_ENDPOINT
-PAYPAL_PLAN_ENDPOINT = settings.PAYPAL_PLAN_ENDPOINT
-
 logger = logging.getLogger(__name__)
-
-class PaypalUrl:
-    def __init__(self):
-        self.base = PAYPAL_BASE_URL
-        self.auth = urljoin(self.base, PAYPAL_AUTH_ENDPOINT)
-        self.product = urljoin(self.base, PAYPAL_PRODUCT_ENDPOINT)
-        self.plan = urljoin(self.base, PAYPAL_PLAN_ENDPOINT)
-
-paypal_url = PaypalUrl()
 
 @handle_errors
 def get_access_token(
-        client_id: str = settings.PAYPAL_CLIENT_ID,
-        client_secret: str = settings.PAYPAL_CLIENT_SECRET
+        client_id: str,
+        client_secret: str
 ) -> str:
     access_token = make_request(
         method="POST",
