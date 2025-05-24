@@ -1,6 +1,6 @@
 import logging
 from fastapi import HTTPException
-from app.schemas.paypal_schema import Product, Plan
+from app.schemas.paypal_schema import Product, Plan, Subscription
 from app.services.paypal.config import paypal_url
 from app.utils.decorators import handle_errors
 from app.utils.http_utils import make_request
@@ -81,3 +81,19 @@ def show_plan_details(access_token: str, plan_id: str) -> dict:
 
 # Subscription
 # ----------
+@handle_errors
+def create_subscription(access_token: str, subscription: Subscription) -> dict:
+    return make_request(
+        method="POST",
+        url=paypal_url.subscription,
+        token=access_token,
+        json=subscription.model_dump()
+    )
+
+@handle_errors
+def show_subscription_details(access_token: str, subscription_id: str) -> dict:
+    return make_request(
+        method="GET",
+        url=f"{paypal_url.subscription}/{subscription_id}",
+        token=access_token
+    )

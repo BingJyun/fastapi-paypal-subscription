@@ -22,3 +22,4 @@ def read_root():
 app.include_router(paypal_api.auth_router)
 app.include_router(paypal_api.product_router)
 app.include_router(paypal_api.plan_router)
+app.include_router(paypal_api.subscription_router)

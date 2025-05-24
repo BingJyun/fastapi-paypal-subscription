@@ -1,12 +1,13 @@
 import logging
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer
-from app.schemas.paypal_schema import Product, Plan
+from app.schemas.paypal_schema import Product, Plan, Subscription
 from app.schemas.api_response import LoginResponse
 from app.services.paypal.api_service import (
     get_access_token,
     create_product, list_products, show_product_details,
-    create_plan, list_plans, show_plan_details
+    create_plan, list_plans, show_plan_details,
+    create_subscription, show_subscription_details
 )
 
 logger = logging.getLogger(__name__)
@@ -62,3 +63,12 @@ def show_plan_details_route(plan_id: str, access_token: str = Depends(oauth2_sch
 
 # Subscription
 # ----------
+subscription_router = APIRouter(tags=["subscription"], prefix="/subscription")
+
+@subscription_router.post("", response_model=dict)
+def create_subscription_route(subscription: Subscription, access_token: str = Depends(oauth2_scheme)):
+    return create_subscription(access_token, subscription)
+
+@subscription_router.get("/{subscription_id}", response_model=dict)
+def show_subscription_details_route(subscription_id: str, access_token: str = Depends(oauth2_scheme)):
+    return show_subscription_details(access_token, subscription_id)
