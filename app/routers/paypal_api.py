@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 security = HTTPBasic()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+# Auth
+# ----------
 auth_router = APIRouter(tags=["auth"], prefix="/auth")
 
 @auth_router.post("", response_model=LoginResponse)
@@ -26,6 +28,8 @@ def get_access_token_route(credentials: HTTPBasicCredentials = Depends(security)
         "access_token": access_token
     }
 
+# Product
+# ----------
 product_router = APIRouter(tags=["product"], prefix="/product")
 
 @product_router.post("", response_model=dict)
@@ -40,6 +44,8 @@ def list_products_route(access_token: str = Depends(oauth2_scheme)):
 def show_product_details_route(product_id: str, access_token: str = Depends(oauth2_scheme)):
     return show_product_details(access_token, product_id)
 
+# Plan
+# ----------
 plan_router = APIRouter(tags=["plan"], prefix="/plan")
 
 @plan_router.post("", response_model=dict)
@@ -53,3 +59,6 @@ def list_plans_route(access_token: str = Depends(oauth2_scheme)):
 @plan_router.get("/{plan_id}", response_model=dict)
 def show_plan_details_route(plan_id: str, access_token: str = Depends(oauth2_scheme)):
     return show_plan_details(access_token, plan_id)
+
+# Subscription
+# ----------

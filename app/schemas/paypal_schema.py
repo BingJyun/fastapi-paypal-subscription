@@ -14,7 +14,7 @@ class Plan(BaseModel):
     name: str
     billing_cycles: list
     payment_preferences: dict
-    status: str | None = None
+    status: str | None = "ACTIVE"
     description: str | None = None
-    quantity_supported: bool | None = None
+    quantity_supported: bool | None = False
     taxes: dict | None = None

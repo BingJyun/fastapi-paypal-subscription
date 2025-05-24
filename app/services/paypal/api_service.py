@@ -7,6 +7,8 @@ from app.utils.http_utils import make_request
 
 logger = logging.getLogger(__name__)
 
+# Auth
+# ----------
 @handle_errors
 def get_access_token(
         client_id: str,
@@ -23,6 +25,8 @@ def get_access_token(
         raise HTTPException(status_code=500, detail="Failed to get access token")
     return access_token
 
+# Product
+# ----------
 @handle_errors
 def create_product(access_token: str, product: Product) -> dict:
     return make_request(
@@ -48,6 +52,8 @@ def show_product_details(access_token: str, product_id: str) -> dict:
         token=access_token
     )
 
+# Plan
+# ----------
 @handle_errors
 def create_plan(access_token: str, plan: Plan) -> dict:
     return make_request(
@@ -72,3 +78,6 @@ def show_plan_details(access_token: str, plan_id: str) -> dict:
         url=f"{paypal_url.plan}/{plan_id}",
         token=access_token
     )
+
+# Subscription
+# ----------
