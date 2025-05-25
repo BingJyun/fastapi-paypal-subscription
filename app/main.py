@@ -15,10 +15,6 @@ app = FastAPI(
     root_path=settings.API_V1_STR
 )
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello FastAPI!"}
-
 app.include_router(paypal_api.auth_router)
 app.include_router(paypal_api.product_router)
 app.include_router(paypal_api.plan_router)
