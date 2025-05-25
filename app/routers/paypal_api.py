@@ -7,7 +7,7 @@ from app.services.paypal.api_service import (
     get_access_token,
     create_product, list_products, show_product_details,
     create_plan, list_plans, show_plan_details,
-    create_subscription, show_subscription_details, update_subscription
+    create_subscription, show_subscription_details, update_subscription, list_transactions
 )
 
 logger = logging.getLogger(__name__)
@@ -76,3 +76,7 @@ def show_subscription_details_route(subscription_id: str, access_token: str = De
 @subscription_router.patch("/{subscription_id}", response_model=dict)
 def update_subscription_route(subscription_id: str, update_request: list[dict], access_token: str = Depends(oauth2_scheme)):
     return update_subscription(access_token, subscription_id, update_request)
+
+@subscription_router.get("/{subscription_id}/transactions", response_model=dict)
+def list_transactions_route(subscription_id: str, start_time: str, end_time: str, access_token: str = Depends(oauth2_scheme)):
+    return list_transactions(access_token, subscription_id, start_time, end_time)

@@ -8,6 +8,7 @@ def make_request(
         method: str,
         url: str,
         headers: dict | None = None,
+        params: dict | None = None,
         data: dict | None = None,
         json: dict | None = None,
         auth: tuple | None = None,
@@ -21,6 +22,7 @@ def make_request(
             method=method,
             url=url,
             headers=headers,
+            params=params,
             data=data,
             json=json,
             auth=auth

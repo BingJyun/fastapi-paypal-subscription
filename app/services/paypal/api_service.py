@@ -106,3 +106,12 @@ def update_subscription(access_token: str, subscription_id: str, update_request:
         token=access_token,
         json=update_request
     )
+
+@handle_errors
+def list_transactions(access_token: str, subscription_id: str, start_time: str, end_time: str) -> dict:
+    return make_request(
+        method="GET",
+        url=f"{paypal_url.subscription}/{subscription_id}/transactions",
+        token=access_token,
+        params={"start_time": start_time, "end_time": end_time}
+    )
