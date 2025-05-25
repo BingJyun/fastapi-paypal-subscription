@@ -26,20 +26,20 @@ def make_request(
             auth=auth
         )
         response.raise_for_status()
-    except requests.exceptions.HTTPError as http_err:
-        status_code = getattr(response, "status_code", 500)
-        logger.error(f"Request failed with status code {status_code}: {str(http_err)}")
-        raise HTTPException(status_code=status_code, detail=f"Request failed: {str(http_err)}")
-    except Exception as general_err:
-        logger.error(f"Unexpected error: {str(general_err)}")
-        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(general_err)}")
-    else:
-        try:
-            response_json = response.json()
-        except ValueError:
-            logger.error("Invalid JSON response")
-            raise HTTPException(status_code=500, detail="Invalid JSON response")
+        if response.status_code == 204:
+            return {}
+        response_json = response.json()
         if not isinstance(response_json, (dict, list)):
             logger.error("Invalid response format")
             raise HTTPException(status_code=500, detail="Invalid response format")
         return response_json
+    except requests.exceptions.HTTPError as http_err:
+        status_code = getattr(response, "status_code", 500)
+        logger.error(f"Request failed with status code {status_code}: {str(http_err)}")
+        raise HTTPException(status_code=status_code, detail=f"Request failed: {str(http_err)}")
+    except ValueError:
+        logger.error("Invalid JSON response")
+        raise HTTPException(status_code=500, detail="Invalid JSON response")
+    except Exception as general_err:
+        logger.error(f"Unexpected error: {str(general_err)}")
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(general_err)}")

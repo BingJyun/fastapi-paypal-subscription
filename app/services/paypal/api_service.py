@@ -97,3 +97,12 @@ def show_subscription_details(access_token: str, subscription_id: str) -> dict:
         url=f"{paypal_url.subscription}/{subscription_id}",
         token=access_token
     )
+
+@handle_errors
+def update_subscription(access_token: str, subscription_id: str, update_request: list[dict]) -> dict:
+    return make_request(
+        method="PATCH",
+        url=f"{paypal_url.subscription}/{subscription_id}",
+        token=access_token,
+        json=update_request
+    )
