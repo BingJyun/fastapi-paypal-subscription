@@ -13,7 +13,7 @@ from app.services.paypal.api_service import (
 logger = logging.getLogger(__name__)
 
 security = HTTPBasic()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth")
 
 # Auth
 # ----------
