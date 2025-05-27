@@ -1,0 +1,14 @@
+# Virtual environment
+venv/
+
+# Python cache files
+__pycache__/
+
+# Environment variables
+.env
+
+# Mac file
+.DS_store
+
+# Test .py
+test.py
