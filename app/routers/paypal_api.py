@@ -1,7 +1,7 @@
 import logging
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer
-from app.schemas.paypal_schema import Product, Plan, Subscription
+from app.schemas.paypal_schema import Product, Plan, Subscription, PatchOperation, ListTransactionsQueryParams
 from app.schemas.api_response import LoginResponse
 from app.services.paypal.api_service import (
     get_access_token,
@@ -74,9 +74,9 @@ def show_subscription_details_route(subscription_id: str, access_token: str = De
     return show_subscription_details(access_token, subscription_id)
 
 @subscription_router.patch("/{subscription_id}", response_model=dict)
-def update_subscription_route(subscription_id: str, update_request: list[dict], access_token: str = Depends(oauth2_scheme)):
+def update_subscription_route(subscription_id: str, update_request: list[PatchOperation], access_token: str = Depends(oauth2_scheme)):
     return update_subscription(access_token, subscription_id, update_request)
 
 @subscription_router.get("/{subscription_id}/transactions", response_model=dict)
-def list_transactions_route(subscription_id: str, start_time: str, end_time: str, access_token: str = Depends(oauth2_scheme)):
-    return list_transactions(access_token, subscription_id, start_time, end_time)
+def list_transactions_route(subscription_id: str, query_params: ListTransactionsQueryParams = Depends(), access_token: str = Depends(oauth2_scheme)):
+    return list_transactions(access_token, subscription_id, query_params)

@@ -1,6 +1,6 @@
 import logging
 from fastapi import HTTPException
-from app.schemas.paypal_schema import Product, Plan, Subscription
+from app.schemas.paypal_schema import Product, Plan, Subscription, PatchOperation, ListTransactionsQueryParams
 from app.services.paypal.config import paypal_url
 from app.utils.decorators import handle_errors
 from app.utils.http_utils import make_request
@@ -99,19 +99,19 @@ def show_subscription_details(access_token: str, subscription_id: str) -> dict:
     )
 
 @handle_errors
-def update_subscription(access_token: str, subscription_id: str, update_request: list[dict]) -> dict:
+def update_subscription(access_token: str, subscription_id: str, update_request: list[PatchOperation]) -> dict:
     return make_request(
         method="PATCH",
         url=f"{paypal_url.subscription}/{subscription_id}",
         token=access_token,
-        json=update_request
+        json=[operation.model_dump() for operation in update_request]
     )
 
 @handle_errors
-def list_transactions(access_token: str, subscription_id: str, start_time: str, end_time: str) -> dict:
+def list_transactions(access_token: str, subscription_id: str, query_params: ListTransactionsQueryParams) -> dict:
     return make_request(
         method="GET",
         url=f"{paypal_url.subscription}/{subscription_id}/transactions",
         token=access_token,
-        params={"start_time": start_time, "end_time": end_time}
+        params={"start_time": query_params.start_time, "end_time": query_params.end_time}
     )

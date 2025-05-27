@@ -29,3 +29,12 @@ class Subscription(BaseModel):
     subscriber: dict | None = None
     application_context: dict | None = None
     plan: dict | None = None
+
+class PatchOperation(BaseModel):
+    op: str
+    path: str
+    value: dict
+
+class ListTransactionsQueryParams(BaseModel):
+    start_time: str
+    end_time: str
